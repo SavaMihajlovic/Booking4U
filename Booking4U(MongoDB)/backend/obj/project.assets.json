@@ -1053,11 +1053,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\backend\\backend.csproj",
+      "projectUniqueName": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj",
       "projectName": "backend",
-      "projectPath": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\backend\\backend.csproj",
+      "projectPath": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj",
       "packagesPath": "C:\\Users\\msava\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\backend\\obj\\",
+      "outputPath": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\Booking4U\\Booking4U(MongoDB)\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\msava\\AppData\\Roaming\\NuGet\\NuGet.Config",

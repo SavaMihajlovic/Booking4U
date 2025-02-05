@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "WeMEsl3BLR3io3hVXp1Z9WuKQ57Bpq0+bmtc3YJISdMuKo9iRvzo6atcbbdqXxzNXtPtTCepaQxEavQLI/2jbw==",
+  "dgSpecHash": "hdSRYELTaoqz3mJbwDaI8A9LHtRNZGmmY03sOV0HZPYv/zXHU1pgHXZ+JtL8EN0bpyedzl7foa16HqRFwNemOg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\backend\\backend.csproj",
+  "projectFilePath": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\msava\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\msava\\.nuget\\packages\\microsoft.aspnetcore.openapi\\8.0.0\\microsoft.aspnetcore.openapi.8.0.0.nupkg.sha512",
