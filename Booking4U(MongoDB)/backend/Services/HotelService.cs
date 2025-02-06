@@ -30,10 +30,29 @@ public class HotelService {
         await _hotelCollection.DeleteOneAsync(h => h.Id == hotel.Id);
     }
 
-    public async Task UpdateHotel(Hotel hotel) 
+       public async Task UpdateHotel(Hotel hotel) 
     {
         var hotelExists = await _hotelCollection.Find(h => h.Id == hotel.Id).FirstOrDefaultAsync() ?? 
         throw new Exception($"Hotel with id:{hotel.Id} not found");
-        var result = await _hotelCollection.ReplaceOneAsync(h => h.Id == hotel.Id, hotel);
+        await _hotelCollection.ReplaceOneAsync(h => h.Id == hotel.Id, hotel);
+    }
+    
+    public async Task<List<Hotel>> GetHotelsWithAvgScore(string city , double score)
+    {
+       return await _hotelCollection.Find(h => h.City == city && h.Score >= score).ToListAsync();
+    }
+
+    public async Task<List<Hotel>> GetHotelsSortedByDistanceFromCenter(string city)
+    {
+        return await _hotelCollection.Find(h => h.City == city)
+        .SortBy(h => h.CenterDistance)
+        .ToListAsync();
+    }
+
+    public async Task<List<Hotel>> GetHolelsSortedByDistanceFromBeach(string city)
+    {
+        return await _hotelCollection.Find(h => h.City == city && h.BeachDistance!=null)
+        .SortBy(h => h.BeachDistance)
+        .ToListAsync();
     }
 }

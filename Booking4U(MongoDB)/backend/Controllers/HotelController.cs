@@ -77,7 +77,7 @@ public class HotelController : ControllerBase
     {
         try
         {
-            if(hotel.Id == null)
+            if(string.IsNullOrEmpty(hotel.Id))
             {
                 return BadRequest("Id field missing");
             }
@@ -85,6 +85,52 @@ public class HotelController : ControllerBase
             return Ok($"Hotel ${hotel.Id} has been successfully updated.");
         }
         catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    
+    [HttpGet("GetHotelsWithAvgScore/{city}/{score}")]
+    public async Task<ActionResult> GetHotelsWithAvgScore(string city, double score)
+    {
+        try
+        {   
+            if(string.IsNullOrEmpty(city) || city.Length > 30)
+                return BadRequest("City field must not be empty and max length is 30 characters");
+            if(score <1 || score >5)
+                return BadRequest($"Score must be between 1 and 5");
+            return Ok(await _service.GetHotelsWithAvgScore(city , score));
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    [HttpGet("GetHotelsSortedByDistanceFromCityCenter/{city}")]
+    public async Task<ActionResult> GetHotelsSortedByDistanceFromCenter(string city)
+    {
+        try
+        {
+            if(string.IsNullOrEmpty(city) || city.Length > 30)
+                return BadRequest("City field must not be empty and max length is 30 characters");
+            return Ok(await _service.GetHotelsSortedByDistanceFromCenter(city));
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+      [HttpGet("GetHolelsSortedByDistanceFromBeach/{city}")]
+    public async Task<ActionResult> GetHolelsSortedByDistanceFromBeach(string city)
+    {
+        try
+        {
+            if(string.IsNullOrEmpty(city) || city.Length > 30)
+                return BadRequest("City field must not be empty and max length is 30 characters");
+            return Ok(await _service.GetHolelsSortedByDistanceFromBeach(city));
+        }
+        catch(Exception ex)
         {
             return BadRequest(ex.Message);
         }
