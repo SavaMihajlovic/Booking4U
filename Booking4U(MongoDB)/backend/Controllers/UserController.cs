@@ -10,7 +10,7 @@ public class UserController : ControllerBase
     {
         _mongoClient = new MongoClient(_configuration.GetConnectionString("MongoDB"));
         _database = _mongoClient.GetDatabase("Booking4U");
-        _service = new UserService(_configuration);         
+        _service = new UserService(_configuration , _database);         
     }
 
     [HttpPost("Register")]

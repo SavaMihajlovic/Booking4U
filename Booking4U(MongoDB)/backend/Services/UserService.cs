@@ -1,11 +1,9 @@
 public class UserService {
     private readonly IMongoCollection<User> _userCollection;
     private readonly IConfiguration _configuration;
-    public UserService(IConfiguration configuration) 
+    public UserService(IConfiguration configuration , IMongoDatabase database) 
     {
         _configuration = configuration;
-        var mongoClient = new MongoClient(configuration.GetConnectionString("MongoDB"));
-        var database = mongoClient.GetDatabase("Booking4U"); 
         _userCollection = database.GetCollection<User>("users_collection");
     }
 
