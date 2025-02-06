@@ -9,11 +9,6 @@ public class RoomService {
 
     public async Task AddRoom(Room room)
     {
-        if (!string.IsNullOrEmpty(room.HotelId))
-        {
-            var hotel = await _hotelCollection.Find(h => h.Id == room.HotelId).FirstOrDefaultAsync() ?? 
-            throw new Exception($"Hotel with id:{room.HotelId} not found");
-        }
         await _roomCollection.InsertOneAsync(room);
     }
 
@@ -40,11 +35,6 @@ public class RoomService {
         var roomExists = await _roomCollection.Find(r => r.Id == room.Id).FirstOrDefaultAsync() ?? 
         throw new Exception($"Room with id:{room.Id} not found");
 
-        if (!string.IsNullOrEmpty(room.HotelId))
-        {
-            var hotel = await _hotelCollection.Find(h => h.Id == room.HotelId).FirstOrDefaultAsync() ?? 
-            throw new Exception($"Hotel with id:{room.HotelId} not found");
-        }
         await _roomCollection.ReplaceOneAsync(r => r.Id == room.Id, room);
     }
 
@@ -52,17 +42,16 @@ public class RoomService {
     {
         var roomExists = await _roomCollection.Find(r => r.Id == roomId).FirstOrDefaultAsync() ?? 
         throw new Exception($"Room with id:{roomId} not found");
-
-        if(roomExists.HotelId == hotelId)
-            return;
         
         var hotel = await _hotelCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
         throw new Exception($"Hotel with id:{hotelId} not found");
 
-        roomExists.HotelId = hotelId;
+        if(hotel.Rooms == null) {
+            hotel.Rooms = new List<Room>();
+        }
+            hotel.Rooms.Add(roomExists);
 
-        await _roomCollection.ReplaceOneAsync(r => r.Id == roomId, roomExists);
-
+        await _hotelCollection.ReplaceOneAsync(h => h.Id == hotel.Id, hotel);
     }
 
     public async Task<List<Room>> GetAllRoomsFromHotel(string hotelId)
@@ -70,7 +59,8 @@ public class RoomService {
         var hotel = await _hotelCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
         throw new Exception($"Hotel with id:{hotelId} not found");
 
-        return await _roomCollection.Find(r => r.HotelId == hotelId).ToListAsync();
+        if(hotel.Rooms == null) return [];
+        return hotel.Rooms;
     }
 
     public async Task<List<Room>> GetAllAvailableRoomsFromHotel(string hotelId)
@@ -78,7 +68,9 @@ public class RoomService {
         var hotel = await _hotelCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
         throw new Exception($"Hotel with id:{hotelId} not found");
 
-        return await _roomCollection.Find(r => r.HotelId == hotelId && r.Availability == true).ToListAsync();
+        if(hotel.Rooms == null) return [];
+        return hotel.Rooms.Where(h => h.Availability == true).ToList();
+
     }
 
     public async Task<List<Room>> GetAllAvailableRoomsFromHotelWithMaxPrice(string hotelId , double maxPrice)
@@ -86,8 +78,8 @@ public class RoomService {
         var hotel = await _hotelCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
         throw new Exception($"Hotel with id:{hotelId} not found");
 
-        return await _roomCollection.Find(r => r.HotelId == hotelId && r.Availability == true && r.PriceForNight <= maxPrice)
-        .ToListAsync();
+        if(hotel.Rooms == null) return [];
+        return hotel.Rooms.Where(h => h.Availability == true && h.PriceForNight <= maxPrice).ToList();
     }
 
 

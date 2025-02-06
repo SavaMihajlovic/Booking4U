@@ -13,6 +13,4 @@ public class Room
     public required bool Availability { get; set; }
 
     public required Characteristics Characteristics { get; set; }
-    
-    public string? HotelId { get; set;}
 }

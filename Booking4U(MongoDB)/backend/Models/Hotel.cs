@@ -11,7 +11,7 @@ public class Hotel {
     public required string City { get; set;}
 
     [MaxLength(100)]
-    public required string Adress { get; set;}
+    public required string Address { get; set;}
 
     [Range(1,5)]
     public required double Score { get; set; }
@@ -30,4 +30,5 @@ public class Hotel {
 
     [MaxLength(20)]
     public required string Location { get; set; }
+    public List<Room>? Rooms { get; set; }
 }
