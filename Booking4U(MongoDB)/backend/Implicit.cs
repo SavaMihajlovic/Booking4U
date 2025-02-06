@@ -4,3 +4,7 @@ global using MongoDB.Driver;
 global using System.ComponentModel.DataAnnotations;
 global using System.Threading.Tasks;
 global using MongoDB.Bson.Serialization.Attributes;
+global using System.Security.Claims;
+global using System.Text;
+global using Microsoft.IdentityModel.Tokens;
+global using System.IdentityModel.Tokens.Jwt;

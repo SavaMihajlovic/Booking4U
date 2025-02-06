@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj": {}
+    "D:\\LAZA SVE\\Faks\\Cetvrta godina\\Faks  -  semestar VII\\Napredne baze\\Projekat\\MongoDB\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj": {
+    "D:\\LAZA SVE\\Faks\\Cetvrta godina\\Faks  -  semestar VII\\Napredne baze\\Projekat\\MongoDB\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj",
+        "projectUniqueName": "D:\\LAZA SVE\\Faks\\Cetvrta godina\\Faks  -  semestar VII\\Napredne baze\\Projekat\\MongoDB\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj",
         "projectName": "backend",
-        "projectPath": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj",
-        "packagesPath": "C:\\Users\\msava\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\Booking4U\\Booking4U(MongoDB)\\backend\\obj\\",
+        "projectPath": "D:\\LAZA SVE\\Faks\\Cetvrta godina\\Faks  -  semestar VII\\Napredne baze\\Projekat\\MongoDB\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj",
+        "packagesPath": "C:\\Users\\Windows\\.nuget\\packages\\",
+        "outputPath": "D:\\LAZA SVE\\Faks\\Cetvrta godina\\Faks  -  semestar VII\\Napredne baze\\Projekat\\MongoDB\\Booking4U\\Booking4U(MongoDB)\\backend\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "E:\\VS 2019 components, tools, SDKS\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\msava\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Windows\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -40,9 +44,21 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "BCrypt": {
+              "target": "Package",
+              "version": "[1.0.0, )"
+            },
+            "BCrypt.Net-Next": {
+              "target": "Package",
+              "version": "[4.0.3, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "Microsoft.IdentityModel.Tokens": {
+              "target": "Package",
+              "version": "[8.3.1, )"
             },
             "MongoDB.Driver": {
               "target": "Package",
@@ -51,6 +67,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.3.1, )"
             }
           },
           "imports": [
@@ -72,7 +92,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.102/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
