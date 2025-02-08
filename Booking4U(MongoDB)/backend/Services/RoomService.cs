@@ -46,10 +46,10 @@ public class RoomService {
         var hotel = await _hotelCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
         throw new Exception($"Hotel with id:{hotelId} not found");
 
-        if(hotel.Rooms == null) {
-            hotel.Rooms = new List<Room>();
+        if (hotel.RoomIds == null) {
+            hotel.RoomIds = [];
         }
-            hotel.Rooms.Add(roomExists);
+            hotel.RoomIds.Add(roomId);
 
         await _hotelCollection.ReplaceOneAsync(h => h.Id == hotel.Id, hotel);
     }
@@ -59,8 +59,11 @@ public class RoomService {
         var hotel = await _hotelCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
         throw new Exception($"Hotel with id:{hotelId} not found");
 
-        if(hotel.Rooms == null) return [];
-        return hotel.Rooms;
+        if(hotel.RoomIds == null) return [];
+        var rooms = await _roomCollection
+        .Find(room => room.Id != null && hotel.RoomIds.Contains(room.Id))
+        .ToListAsync();
+        return rooms;
     }
 
     public async Task<List<Room>> GetAllAvailableRoomsFromHotel(string hotelId)
@@ -68,8 +71,11 @@ public class RoomService {
         var hotel = await _hotelCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
         throw new Exception($"Hotel with id:{hotelId} not found");
 
-        if(hotel.Rooms == null) return [];
-        return hotel.Rooms.Where(h => h.Availability == true).ToList();
+        if(hotel.RoomIds == null) return [];
+        var rooms = await _roomCollection
+        .Find(room => room.Id != null && hotel.RoomIds.Contains(room.Id) && room.Availability == true)
+        .ToListAsync();
+        return rooms;
 
     }
 
@@ -78,8 +84,11 @@ public class RoomService {
         var hotel = await _hotelCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
         throw new Exception($"Hotel with id:{hotelId} not found");
 
-        if(hotel.Rooms == null) return [];
-        return hotel.Rooms.Where(h => h.Availability == true && h.PriceForNight <= maxPrice).ToList();
+        if(hotel.RoomIds == null) return [];
+        var rooms = await _roomCollection
+        .Find(room => room.Id != null && hotel.RoomIds.Contains(room.Id) && room.PriceForNight <= maxPrice)
+        .ToListAsync();
+        return rooms;
     }
 
 

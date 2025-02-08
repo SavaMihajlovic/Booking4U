@@ -15,11 +15,28 @@ public class HotelController : ControllerBase
     }
 
     [HttpPost("AddHotel")]
-    public async Task<ActionResult> AddHotel ([FromBody] Hotel hotel)
+    public async Task<ActionResult> AddHotel ([FromForm] Hotel hotel, IFormFile image)
     {
         try
         {
-            await _service.AddHotel(hotel);
+
+            if (image == null || image.Length == 0) {
+                return BadRequest("Image is required.");
+            }
+
+            var newHotel = new Hotel {
+                Name = hotel.Name,
+                City = hotel.City,
+                Address = hotel.Address,
+                Score = hotel.Score,
+                Description = hotel.Description,
+                Contact = hotel.Contact,
+                CenterDistance = hotel.CenterDistance,
+                BeachDistance = hotel.BeachDistance,
+                Location = hotel.Location
+            };
+
+            await _service.AddHotel(newHotel,image);
             return Ok($"Hotel {hotel.Name} successfully added.");
         }
         catch (Exception ex)
@@ -35,6 +52,22 @@ public class HotelController : ControllerBase
         try
         {
             return Ok(await _service.GetAllHotels());
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("GetPageHotels/{page}")]
+    public async Task<ActionResult> GetPageHotels(int page = 1)
+    {
+        try
+        {
+            if (page < 1)
+                return BadRequest("Page must be greater than 0");
+                
+            return Ok(await _service.GetPageHotels(page));
         }
         catch (Exception ex)
         {

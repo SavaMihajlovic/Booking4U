@@ -1,7 +1,10 @@
 import React from 'react'
+import Hotels from '../../components/Hotels/Hotels'
 
-export const HomeUser = () => {
+export const HomeUser = ({filterOpen}) => {
   return (
-    <div>HomeUser</div>
+    <>
+      <Hotels filterOpen={filterOpen}/>
+    </>
   )
 }

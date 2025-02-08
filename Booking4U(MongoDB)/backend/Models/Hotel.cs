@@ -30,5 +30,10 @@ public class Hotel {
 
     [MaxLength(20)]
     public required string Location { get; set; }
-    public List<Room>? Rooms { get; set; }
+
+    [BsonRepresentation(BsonType.ObjectId)]
+    public List<string>? RoomIds { get; set; }
+
+    [MaxLength(5000)]
+    public string? Image { get; set; }
 }

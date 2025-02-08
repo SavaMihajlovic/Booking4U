@@ -14,13 +14,30 @@ public class HotelService {
         return hotel;
     }
 
-    public async Task AddHotel(Hotel hotel) 
+    public async Task AddHotel(Hotel hotel, IFormFile image) 
     {
+        if(image != null && image.Length > 0)
+        {
+            using var stream = new MemoryStream();
+            await image.CopyToAsync(stream);
+            hotel.Image = Convert.ToBase64String(stream.ToArray());
+        }
         await _hotelCollection.InsertOneAsync(hotel);
     }
     public async Task<List<Hotel>> GetAllHotels() 
     {
         return await _hotelCollection.Find(_ => true).ToListAsync();
+    }
+
+    public async Task<List<Hotel>> GetPageHotels(int page)
+    {
+        int limitPage = 10;
+        var hotels = await _hotelCollection.Find(h => true)
+            .Skip((page - 1) * limitPage)  
+            .Limit(limitPage)
+            .ToListAsync();
+
+        return hotels;
     }
 
     public async Task DeleteHotel(string id)

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "/s4yf3+e4qcrhk6BOVNxeiBNp5709Y4zR+4OlBrjhPJ2Xlq57qnjkDeBIk8i1rEajI6KN4tQ8FbkFiEq/GxL5A==",
+  "dgSpecHash": "VFcnD58MOZvH1J8ms+S8SMcFIixieG9RZUrPkZqmMBXhOudwmEL5G8Kemu2+gZ78Zh2TctW+yUxSZctDSPSOuQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\msava\\OneDrive\\Desktop\\IV GODINA\\SEMESTAR 7\\NAPREDNE BAZE PODATAKA\\Booking4U\\Booking4U(MongoDB)\\backend\\backend.csproj",
+  "projectFilePath": "C:\\Users\\msava\\OneDrive\\Desktop\\Booking4U(MongoDB)\\backend\\backend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\msava\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\msava\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import LoginForm from '../../components/PrijavaForm/PrijavaForm';
 import { jwtDecode } from 'jwt-decode';
+import Hotels from '../../components/Hotels/Hotels';
 
 export const Home = ({loginDialogOpen,setLoginDialogOpen,filterOpen}) => {
 
@@ -49,7 +50,7 @@ export const Home = ({loginDialogOpen,setLoginDialogOpen,filterOpen}) => {
                 <LoginForm loginDialogOpen={loginDialogOpen} setLoginDialogOpen={setLoginDialogOpen}/>
             </div>
         )}
-        Home
+        <Hotels filterOpen={filterOpen}/>
     </> 
   );
 }
