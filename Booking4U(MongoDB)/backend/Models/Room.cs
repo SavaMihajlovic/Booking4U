@@ -9,8 +9,4 @@ public class Room
     public required string TypeOfRoom { get; set; }
     [Range(15,100)]
     public required double PriceForNight { get; set; }
-    [DefaultValue(true)]
-    public required bool Availability { get; set; }
-
-    public required Characteristics Characteristics { get; set; }
 }

@@ -50,8 +50,9 @@ const Hotels = ({filterOpen}) => {
             <section id="hotels">
                 <div className="items-container">
                     <div className="menu-container">
-                    {hotels.map((hotel, index) => (
-                        <HotelInfo hotel={hotel} index={index} />
+                    {(filteredHotels.length > 0 ? filteredHotels : hotels)
+                    .map((hotel, index) => (
+                        <HotelInfo hotel={hotel} key={index} />
                     ))}
                     </div>
                     <section id="pagination">

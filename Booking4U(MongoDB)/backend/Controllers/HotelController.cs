@@ -11,7 +11,7 @@ public class HotelController : ControllerBase
     {
         _mongoClient = new MongoClient(_configuration.GetConnectionString("MongoDB"));
         _database = _mongoClient.GetDatabase("Booking4U");
-        _service = new HotelService(_configuration);         
+        _service = new HotelService(_database);         
     }
 
     [HttpPost("AddHotel")]
@@ -19,24 +19,11 @@ public class HotelController : ControllerBase
     {
         try
         {
-
             if (image == null || image.Length == 0) {
                 return BadRequest("Image is required.");
             }
 
-            var newHotel = new Hotel {
-                Name = hotel.Name,
-                City = hotel.City,
-                Address = hotel.Address,
-                Score = hotel.Score,
-                Description = hotel.Description,
-                Contact = hotel.Contact,
-                CenterDistance = hotel.CenterDistance,
-                BeachDistance = hotel.BeachDistance,
-                Location = hotel.Location
-            };
-
-            await _service.AddHotel(newHotel,image);
+            await _service.AddHotel(hotel,image);
             return Ok($"Hotel {hotel.Name} successfully added.");
         }
         catch (Exception ex)
@@ -154,7 +141,7 @@ public class HotelController : ControllerBase
         }
     }
 
-      [HttpGet("GetHolelsSortedByDistanceFromBeach/{city}")]
+    [HttpGet("GetHolelsSortedByDistanceFromBeach/{city}")]
     public async Task<ActionResult> GetHolelsSortedByDistanceFromBeach(string city)
     {
         try
@@ -164,6 +151,49 @@ public class HotelController : ControllerBase
             return Ok(await _service.GetHolelsSortedByDistanceFromBeach(city));
         }
         catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("GetHotelsFilter")]
+    public async Task<ActionResult> GetHotelsFilter([FromQuery] FilterRequest filterRequest)
+    {
+        try
+        {
+            if (filterRequest.Page < 1)
+                return BadRequest("Invalid page");
+            
+            return Ok(await _service.GetHotelsFilter(filterRequest));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    
+    [HttpGet("GetAllCities/{countryName}")]
+    public async Task<ActionResult> GetAllCities(string countryName)
+    {
+        try
+        {
+            return Ok(await _service.GetAllCities(countryName));
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("GetAllCountries")]
+    public async Task<ActionResult> GetAllCountries()
+    {
+        try
+        {
+            return Ok(await _service.GetAllCountries());
+        }
+        catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }

@@ -8,6 +8,9 @@ public class Hotel {
     public required string Name { get; set; }
 
     [MaxLength(30)]
+    public required string Country { get; set;}
+
+    [MaxLength(30)]
     public required string City { get; set;}
 
     [MaxLength(100)]
@@ -30,9 +33,7 @@ public class Hotel {
 
     [MaxLength(20)]
     public required string Location { get; set; }
-
-    [BsonRepresentation(BsonType.ObjectId)]
-    public List<string>? RoomIds { get; set; }
+    public List<Room>? Rooms { get; set; }
 
     [MaxLength(5000)]
     public string? Image { get; set; }

@@ -104,18 +104,6 @@ public class RoomController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    [HttpGet("GetAllAvailableRoomsFromHotel/{hotelId}")]
-    public async Task<ActionResult> GetAllAvailableRoomsFromHotel(string hotelId)
-    {
-        try
-        {
-            return Ok(await _service.GetAllAvailableRoomsFromHotel(hotelId));
-        }
-        catch(Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
 
     [HttpGet("GetAllAvailableRoomsFromHotelWithMaxPrice/{hotelId}/{maxPrice}")]
     public async Task<ActionResult> GetAllAvailableRoomsFromHotelWithMaxPrice(string hotelId , double maxPrice)
@@ -129,6 +117,19 @@ public class RoomController : ControllerBase
             return Ok(await _service.GetAllAvailableRoomsFromHotelWithMaxPrice(hotelId , maxPrice));
         }
         catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("GetAllRoomTypes")]
+    public async Task<ActionResult> GetAllRoomTypes()
+    {
+        try
+        {
+            return Ok(await _service.GetAllRoomTypes());
+        }
+        catch (Exception ex)
         {
             return BadRequest(ex.Message);
         }

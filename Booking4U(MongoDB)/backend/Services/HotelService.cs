@@ -1,15 +1,16 @@
 public class HotelService {
-    private readonly IMongoCollection<Hotel> _hotelCollection;
-    public HotelService(IConfiguration configuration) 
+    private readonly IMongoCollection<Hotel> _hotelsCollection;
+    private readonly IMongoCollection<Room> _roomsCollection;
+
+    public HotelService(IMongoDatabase database) 
     {
-        var mongoClient = new MongoClient(configuration.GetConnectionString("MongoDB"));
-        var database = mongoClient.GetDatabase("Booking4U"); 
-        _hotelCollection = database.GetCollection<Hotel>("hotels_collection");
+        _hotelsCollection = database.GetCollection<Hotel>("hotels_collection");
+        _roomsCollection = database.GetCollection<Room>("rooms_collection");
     }
 
     public async Task<Hotel> GetHotel(string id) 
     {
-        var hotel = await _hotelCollection.Find(h => h.Id == id).FirstOrDefaultAsync() ?? 
+        var hotel = await _hotelsCollection.Find(h => h.Id == id).FirstOrDefaultAsync() ?? 
         throw new Exception($"Hotel with id:{id} not found");
         return hotel;
     }
@@ -22,18 +23,19 @@ public class HotelService {
             await image.CopyToAsync(stream);
             hotel.Image = Convert.ToBase64String(stream.ToArray());
         }
-        await _hotelCollection.InsertOneAsync(hotel);
+        await _hotelsCollection.InsertOneAsync(hotel);
     }
     public async Task<List<Hotel>> GetAllHotels() 
     {
-        return await _hotelCollection.Find(_ => true).ToListAsync();
+        return await _hotelsCollection.Find(_ => true).ToListAsync();
     }
 
     public async Task<List<Hotel>> GetPageHotels(int page)
     {
         int limitPage = 10;
-        var hotels = await _hotelCollection.Find(h => true)
-            .Skip((page - 1) * limitPage)  
+        int skip = (page - 1) * limitPage;
+        var hotels = await _hotelsCollection.Find(h => true)
+            .Skip(skip)  
             .Limit(limitPage)
             .ToListAsync();
 
@@ -42,34 +44,93 @@ public class HotelService {
 
     public async Task DeleteHotel(string id)
     {
-        var hotel = await _hotelCollection.Find(h => h.Id == id).FirstOrDefaultAsync() ?? 
+        var hotel = await _hotelsCollection.Find(h => h.Id == id).FirstOrDefaultAsync() ?? 
         throw new Exception($"Hotel with id:{id} not found");
-        await _hotelCollection.DeleteOneAsync(h => h.Id == hotel.Id);
+        await _hotelsCollection.DeleteOneAsync(h => h.Id == hotel.Id);
     }
 
        public async Task UpdateHotel(Hotel hotel) 
     {
-        var hotelExists = await _hotelCollection.Find(h => h.Id == hotel.Id).FirstOrDefaultAsync() ?? 
+        var hotelExists = await _hotelsCollection.Find(h => h.Id == hotel.Id).FirstOrDefaultAsync() ?? 
         throw new Exception($"Hotel with id:{hotel.Id} not found");
-        await _hotelCollection.ReplaceOneAsync(h => h.Id == hotel.Id, hotel);
+        await _hotelsCollection.ReplaceOneAsync(h => h.Id == hotel.Id, hotel);
     }
     
     public async Task<List<Hotel>> GetHotelsWithAvgScore(string city , double score)
     {
-       return await _hotelCollection.Find(h => h.City == city && h.Score >= score).ToListAsync();
+       return await _hotelsCollection.Find(h => h.City == city && h.Score >= score).ToListAsync();
     }
 
     public async Task<List<Hotel>> GetHotelsSortedByDistanceFromCenter(string city)
     {
-        return await _hotelCollection.Find(h => h.City == city)
+        return await _hotelsCollection.Find(h => h.City == city)
         .SortBy(h => h.CenterDistance)
         .ToListAsync();
     }
 
     public async Task<List<Hotel>> GetHolelsSortedByDistanceFromBeach(string city)
     {
-        return await _hotelCollection.Find(h => h.City == city && h.BeachDistance!=null)
+        return await _hotelsCollection.Find(h => h.City == city && h.BeachDistance!=null)
         .SortBy(h => h.BeachDistance)
         .ToListAsync();
+    }
+
+    public async Task<List<Hotel>> GetHotelsFilter(FilterRequest filterRequest)
+    {
+        int limitPage = 10;
+        int skip = (filterRequest.Page - 1) * limitPage;
+
+        var hotelFilters = new List<FilterDefinition<Hotel>>();
+        var roomFilters = new List<FilterDefinition<Room>>();
+
+        // Hotel filters
+
+        if(!string.IsNullOrEmpty(filterRequest.City))
+        hotelFilters.Add(Builders<Hotel>.Filter.Eq(h => h.City, filterRequest.City));
+
+        if(filterRequest.Score.HasValue && filterRequest.Score.Value >= 1 && filterRequest.Score.Value <= 5)
+        hotelFilters.Add(Builders<Hotel>.Filter.Gte(h => h.Score, filterRequest.Score.Value));
+
+        if(filterRequest.CenterDistance.HasValue && filterRequest.CenterDistance.Value >= 0 && filterRequest.CenterDistance <= 10)
+        hotelFilters.Add(Builders<Hotel>.Filter.Lte(h => h.CenterDistance, filterRequest.CenterDistance.Value));
+
+        // Room filters
+
+        if(!string.IsNullOrEmpty(filterRequest.TypeOfRoom))
+        roomFilters.Add(Builders<Room>.Filter.Eq(r => r.TypeOfRoom, filterRequest.TypeOfRoom));
+
+        if (filterRequest.PriceForNight.HasValue)
+            roomFilters.Add(Builders<Room>.Filter.Lte(r => r.PriceForNight, filterRequest.PriceForNight.Value));
+
+        var roomFilter = roomFilters.Count > 0 ? Builders<Hotel>.Filter.ElemMatch(h => h.Rooms, Builders<Room>.Filter.And(roomFilters)) : Builders<Hotel>.Filter.Empty;
+
+        if (roomFilters.Count > 0)
+        {
+            hotelFilters.Add(roomFilter);
+        }
+
+        var hotelFilter = hotelFilters.Count > 0 ? Builders<Hotel>.Filter.And(hotelFilters) : Builders<Hotel>.Filter.Empty;
+        return await _hotelsCollection.Find(hotelFilter)
+            .Skip(skip)
+            .Limit(limitPage)
+            .ToListAsync();
+    }
+
+    public async Task<List<string>> GetAllCities(string countryName)
+    {
+        var filter = Builders<Hotel>.Filter.Eq(h => h.Country, countryName);
+        var cities = await _hotelsCollection
+            .Distinct<string>("City", filter)
+            .ToListAsync();
+        
+        return cities;
+    }
+
+    public async Task<List<string>> GetAllCountries()
+    {
+        var contries = await _hotelsCollection
+        .Distinct<string>("Country", Builders<Hotel>.Filter.Empty)
+        .ToListAsync();
+        return contries;
     }
 }

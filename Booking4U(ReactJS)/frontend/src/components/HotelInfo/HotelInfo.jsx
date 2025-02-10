@@ -38,7 +38,7 @@ const HotelInfo = ({hotel, index}) => {
             {hotel.description || 'No description available.'}
         </Card.Description>
         <Box as="ul" mb="4" listStyleType="circle" display='flex' flexDirection='column'>
-            <li><strong>{hotel.city}</strong></li>
+            <li><strong>{hotel.city}, {hotel.country}</strong></li>
             <li><strong>Ul. {hotel.address}</strong></li>
             <li><strong>Lokacija: {hotel.location}</strong></li>
             <li><strong>Ocena: {hotel.score}</strong></li>

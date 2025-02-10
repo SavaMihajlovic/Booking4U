@@ -1,76 +1,69 @@
 import React, { useEffect, useState } from 'react'
 import styles from './Sidebar.module.css'
-import { Radio, RadioGroup } from "@/components/ui/radio"
+import {
+  MenuContent,
+  MenuRadioItem,
+  MenuRadioItemGroup,
+  MenuRoot,
+  MenuTrigger,
+} from "@/components/ui/menu"
 import { VStack, Input, Box, Button } from "@chakra-ui/react"
 import axios from 'axios'
 
-const Sidebar = ({type, setFilteredMovies, setPrevFilteredMovies, 
-                        setFilteredTVShows, setPrevFilteredTVShows, 
-                        currentPage}) => {
+const Sidebar = ({setFilteredHotels,currentPage}) => {
 
-  const [genres, setGenres] = useState([]);
+  const [roomTypes, setRoomTypes] = useState([]);
+  const [countries, setCountries] = useState([]);
+  const [country, setCountry] = useState('');
+  const [cities, setCities] = useState([]);
   const [filters, setFilters] = useState({
-    genre: '', 
-    yearOfRelease: '', 
-    grade: '', 
-    actorFirstName: '', 
-    actorLastName: '', 
-    directorFirstName: '', 
-    directorLastName: ''
+    city: '', 
+    score: '', 
+    centerDistance: '', 
+    typeOfRoom: '', 
+    priceForNight: '', 
   });
 
   useEffect(() => {
-    const fetchGenres = async () => {
+    const fetchData = async () => {
       try {
-        let url;
-        if(type === 'movies') {
-          url = 'http://localhost:5023/Movie/GetAllUniqueGenres';
-        } else {
-          url = 'http://localhost:5023/TVShow/GetAllUniqueGenres';
+        const roomTypesResponse = await axios.get("http://localhost:5193/Room/GetAllRoomTypes");
+        setRoomTypes(roomTypesResponse.data);
+
+        const countriesResponse = await axios.get("http://localhost:5193/Hotel/GetAllCountries");
+        setCountries(countriesResponse.data);
+
+        if(country !== '') {
+          const citiesResponse = await axios.get(`http://localhost:5193/Hotel/GetAllCities/${country}`);
+          setCities(citiesResponse.data);
         }
-        const genresResponse = await axios.get(url);
-        setGenres(genresResponse.data);
       } catch (err) {
-        console.error("Greska u pribavljanju zanrova filmova ili serija.");
+        console.error("Greska u pribavljanju tipova soba.");
       }
     }
 
-    fetchGenres();
-  }, []);
+    fetchData();
+  }, [country]);
 
   const handleConfirmFilters = async () => {
     try {
       const filterRequest = {
-        genre: filters.genre ? filters.genre : null,  
-        yearOfRelease: filters.yearOfRelease ? parseInt(filters.yearOfRelease) : null, 
-        grade: filters.grade ? parseFloat(filters.grade) : null, 
-        actorFirstName: filters.actorFirstName ? filters.actorFirstName : null,  
-        actorLastName: filters.actorLastName ? filters.actorLastName : null,  
-        directorFirstName: filters.directorFirstName ? filters.directorFirstName : null, 
-        directorLastName: filters.directorLastName ? filters.directorLastName : null,
+        city: filters.city ? filters.city : null,  
+        score: filters.score ? parseFloat(filters.score) : null, 
+        centerDistance: filters.centerDistance ? parseFloat(filters.centerDistance) : null, 
+        typeOfRoom: filters.typeOfRoom ? filters.typeOfRoom : null,  
+        priceForNight: filters.priceForNight ? parseInt(filters.priceForNight) : null,  
         page: currentPage
       };
 
-      let url;
-      if (type === 'movies') {
-        url = 'http://localhost:5023/Movie/GetMoviesFilter';
-      } else {
-        url = 'http://localhost:5023/TVShow/GetTVShowFilter'; 
-      }
-
-      const response = await axios.get(url, { params: filterRequest });
+      const response = await axios.get("http://localhost:5193/Hotel/GetHotelsFilter", { params: filterRequest });
 
       if (response.status === 200) {
-        if (type === 'movies') {
-          setFilteredMovies(response.data);
-          setPrevFilteredMovies(response.data);
-        } else {
-          setFilteredTVShows(response.data);
-          setPrevFilteredTVShows(response.data);
-        }
+          setFilteredHotels(response.data);
       } else {
         console.error('Greška u odgovoru:', response.status);
       }
+
     } catch (err) {
       console.error('Greška u slanju filtera:', err);
     }
@@ -78,48 +71,146 @@ const Sidebar = ({type, setFilteredMovies, setPrevFilteredMovies,
 
   return (
     <div className={`${styles.filterSection}`}>
-      <div className="home-text">
-        <p><strong>Žanr</strong></p>
-      </div>
-      <div>
-        <RadioGroup 
-          onChange={(e) => setFilters(prevState => ({ ...prevState, genre: e.target.value }))} 
-          colorPalette='blue'>
-          <VStack gap="4" style={{ alignItems: 'start' }}>
-            {genres.map((genre) => (
-              <Radio key={genre} value={genre} colorScheme="blue">{genre}</Radio>
-            ))}
-          </VStack>
-        </RadioGroup>
-      </div>
+      <VStack gap='4' style={{ alignItems: 'start', marginTop: '20px', width: '100%' }}>
+        <Box style={{ fontWeight: 'bold', fontSize: '18px' }}>Država</Box>
+        <MenuRoot>
+          <MenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              style={{
+                backgroundColor: 'white',
+                width: '150px',
+                padding: '10px',
+                marginRight: '35px',
+                borderRadius: '4px',
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                fontSize: '14px',
+                fontWeight: '500',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+              }}
+            >
+              <span style={{ color: 'black', fontWeight: 'bold' }}>Izaberi državu</span>
+            </Button>
+          </MenuTrigger>
+          <MenuContent
+            style={{
+              borderRadius: '8px',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+              minWidth: '180px',
+              border: '1px solid #ccc',
+              color: 'white'
+            }}
+          >
+            <MenuRadioItemGroup
+              value={country}
+              onValueChange={(e) => {
+                setCountry(e.value);
+              }}
+              style={{ marginTop: '5px', color: 'black'}}
+            >
+            {countries.map((c, index) => {
+              return (
+                <MenuRadioItem
+                  key={index}
+                  value={c}
+                  style={{
+                    fontSize: '16px',
+                    cursor: 'pointer',
+                    borderRadius: '6px',
+                    transition: 'background-color 0.2s ease',
+                    marginBottom: '5px',
+                    marginRight: '25px',
+                  }}
+                >
+                  {c}
+                </MenuRadioItem>
+              );
+            })}
+            </MenuRadioItemGroup>
+          </MenuContent>
+        </MenuRoot>
+      </VStack>
       
       <VStack gap='4' style={{ alignItems: 'start', marginTop: '20px', width: '100%' }}>
-        <Box style={{ fontWeight: 'bold', fontSize: '18px' }}>Godina</Box>
-        <Input 
-          placeholder="Unesite godinu"
-          value={filters.yearOfRelease}
-          onChange={(e) => setFilters(prevState => ({
-            ...prevState,
-            yearOfRelease: e.target.value
-          }))}
-          style={{
-            padding: '5px',
-            color: 'white',
-            backgroundColor: '#2a2629',
-            width: '100%'
-          }} 
-          _placeholder={{ color: "#888888" }}
-        />
+        <Box style={{ fontWeight: 'bold', fontSize: '18px' }}>Grad</Box>
+        <MenuRoot>
+          <MenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              style={{
+                backgroundColor: 'white',
+                width: '150px',
+                padding: '10px',
+                marginRight: '35px',
+                borderRadius: '4px',
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                fontSize: '14px',
+                fontWeight: '500',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+              }}
+              disabled={country === ''}
+            >
+              <span style={{ color: 'black', fontWeight: 'bold' }}>{country === '' ? 'Izaberi prvo državu' : 'Izaberi grad'}</span>
+            </Button>
+          </MenuTrigger>
+          <MenuContent
+            style={{
+              borderRadius: '8px',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+              minWidth: '180px',
+              border: '1px solid #ccc',
+              color: 'white'
+            }}
+          >
+            <MenuRadioItemGroup
+              value={filters.city}
+              onValueChange={(e) => {
+                setFilters((prevFilters) => ({
+                  ...prevFilters,
+                  city: e.value,
+                }));
+              }}
+              style={{ marginTop: '5px', color: 'black'}}
+            >
+            {cities.map((c, index) => {
+              return (
+                <MenuRadioItem
+                  key={index}
+                  value={c}
+                  style={{
+                    fontSize: '16px',
+                    cursor: 'pointer',
+                    borderRadius: '6px',
+                    transition: 'background-color 0.2s ease',
+                    marginBottom: '5px',
+                    marginRight: '25px',
+                  }}
+                >
+                  {c}
+                </MenuRadioItem>
+              );
+            })}
+            </MenuRadioItemGroup>
+          </MenuContent>
+        </MenuRoot>
       </VStack>
 
       <VStack gap='4' style={{ alignItems: 'start', marginTop: '20px', width: '100%' }}>
         <Box style={{ fontWeight: 'bold', fontSize: '18px' }}>Minimalna ocena</Box>
         <Input 
           placeholder="Unesite ocenu"
-          value={filters.grade}
+          value={filters.score}
           onChange={(e) => setFilters(prevState => ({
             ...prevState,
-            grade: e.target.value
+            score: e.target.value
           }))}
           style={{
             padding: '5px',
@@ -132,28 +223,13 @@ const Sidebar = ({type, setFilteredMovies, setPrevFilteredMovies,
       </VStack>
 
       <VStack gap='4' style={{ alignItems: 'start', marginTop: '20px', width: '100%' }}>
-        <Box style={{ fontWeight: 'bold', fontSize: '18px' }}>Glumac</Box>
+        <Box style={{ fontWeight: 'bold', fontSize: '18px' }}>Udaljenost od centra</Box>
         <Input 
-          placeholder="Unesite ime"
-          value={filters.actorFirstName}
+          placeholder="0 - 10 km"
+          value={filters.centerDistance}
           onChange={(e) => setFilters(prevState => ({
             ...prevState,
-            actorFirstName: e.target.value
-          }))}
-          style={{
-            padding: '5px',
-            color: 'white',
-            backgroundColor: '#2a2629',
-            width: '100%'
-          }} 
-          _placeholder={{ color: "#888888" }}
-        />
-        <Input 
-          placeholder="Unesite prezime"
-          value={filters.actorLastName}
-          onChange={(e) => setFilters(prevState => ({
-            ...prevState,
-            actorLastName: e.target.value
+            centerDistance: e.target.value
           }))}
           style={{
             padding: '5px',
@@ -166,28 +242,80 @@ const Sidebar = ({type, setFilteredMovies, setPrevFilteredMovies,
       </VStack>
 
       <VStack gap='4' style={{ alignItems: 'start', marginTop: '20px', width: '100%' }}>
-        <Box style={{ fontWeight: 'bold', fontSize: '18px' }}>Režiser</Box>
+        <Box style={{ fontWeight: 'bold', fontSize: '18px' }}>Tip sobe</Box>
+        <MenuRoot>
+          <MenuTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              style={{
+                backgroundColor: 'white',
+                width: '150px',
+                padding: '10px',
+                marginRight: '35px',
+                borderRadius: '4px',
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.1)',
+                fontSize: '14px',
+                fontWeight: '500',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '5px',
+              }}
+            >
+              <span style={{ color: 'black', fontWeight: 'bold' }}>Izaberi tip sobe</span>
+            </Button>
+          </MenuTrigger>
+          <MenuContent
+            style={{
+              borderRadius: '8px',
+              boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)',
+              minWidth: '180px',
+              border: '1px solid #ccc',
+              color: 'white'
+            }}
+          >
+            <MenuRadioItemGroup
+              value={filters.typeOfRoom}
+              onValueChange={(e) => {
+                setFilters((prevFilters) => ({
+                  ...prevFilters,
+                  typeOfRoom: e.value,
+                }));
+              }}
+              style={{ marginTop: '5px', color: 'black'}}
+            >
+            {roomTypes.map((rt, index) => {
+              return (
+                <MenuRadioItem
+                  key={index}
+                  value={rt}
+                  style={{
+                    fontSize: '16px',
+                    cursor: 'pointer',
+                    borderRadius: '6px',
+                    transition: 'background-color 0.2s ease',
+                    marginBottom: '5px',
+                    marginRight: '25px',
+                  }}
+                >
+                  {rt}
+                </MenuRadioItem>
+              );
+            })}
+            </MenuRadioItemGroup>
+          </MenuContent>
+        </MenuRoot>
+      </VStack>
+
+      <VStack gap='4' style={{ alignItems: 'start', marginTop: '20px', width: '100%' }}>
+        <Box style={{ fontWeight: 'bold', fontSize: '18px' }}>Cena smeštaja za noć</Box>
         <Input 
-          placeholder="Unesite ime"
-          value={filters.directorFirstName}
+          placeholder="Unesite maksimalni iznos"
+          value={filters.priceForNight}
           onChange={(e) => setFilters(prevState => ({
             ...prevState,
-            directorFirstName: e.target.value
-          }))}
-          style={{
-            padding: '5px',
-            color: 'white',
-            backgroundColor: '#2a2629',
-            width: '100%'
-          }} 
-          _placeholder={{ color: "#888888" }}
-        />
-        <Input 
-          placeholder="Unesite prezime"
-          value={filters.directorLastName}
-          onChange={(e) => setFilters(prevState => ({
-            ...prevState,
-            directorLastName: e.target.value
+            priceForNight: e.target.value
           }))}
           style={{
             padding: '5px',
