@@ -165,6 +165,13 @@ section {
   grid-gap: 1.5rem;
 }
 
+.reservation-container {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 1.5rem;
+  width: 100%;
+}
+
 @media (max-width: 1200px) {
   .menu-container {
     grid-template-columns: repeat(4, minmax(180px, auto));

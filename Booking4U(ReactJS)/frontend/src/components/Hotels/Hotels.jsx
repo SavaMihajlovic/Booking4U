@@ -11,7 +11,7 @@ import HotelInfo from '../HotelInfo/HotelInfo';
 import styles from './Hotels.module.css';
 import Sidebar from '../Sidebar/Sidebar';
 
-const Hotels = ({filterOpen}) => {
+const Hotels = ({filterOpen,setLoginDialogOpen}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [hotels, setHotels] = useState([]);
     const [hotelsCount, setHotelsCount] = useState(0);
@@ -26,7 +26,7 @@ const Hotels = ({filterOpen}) => {
             const response = await axios.get(`http://localhost:5193/Hotel/GetPageHotels/${currentPage}`);
             response.status === 200 ? setHotels(response.data) : console.error("Error fetching hotels.");
           } catch (error) {
-            console.error('Greska u pribavljanju filmova.', error);
+            console.error('Greska u pribavljanju hotela.', error);
           }
         };
         fetchHotels();
@@ -52,7 +52,7 @@ const Hotels = ({filterOpen}) => {
                     <div className="menu-container">
                     {(filteredHotels.length > 0 ? filteredHotels : hotels)
                     .map((hotel, index) => (
-                        <HotelInfo hotel={hotel} key={index} />
+                        <HotelInfo hotel={hotel} key={index} setLoginDialogOpen={setLoginDialogOpen} />
                     ))}
                     </div>
                     <section id="pagination">

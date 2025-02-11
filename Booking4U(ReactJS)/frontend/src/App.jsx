@@ -7,6 +7,8 @@ import Navbar from "./components/Navbar/Navbar";
 import { HomeUser } from "./pages/User/HomeUser";
 import PrivateRoutes from "./utils/PrivateRoutes";
 import { HomeAdmin } from "./pages/Admin/HomeAdmin";
+import { UserReservation } from "./pages/User/UserReservation";
+import { UserMyReservations } from "./pages/User/UserMyReservations";
 
 const App = () => {
 
@@ -27,6 +29,8 @@ const App = () => {
                                                filterOpen={filterOpen}/>} />
                 <Route element={<PrivateRoutes role = 'user' />}>
                   <Route path="/user" element={<HomeUser filterOpen={filterOpen}/>} />
+                  <Route path="/user-reservation" element={<UserReservation/>} />
+                  <Route path="/user-my-reservations" element={<UserMyReservations/>} />
                 </Route>
                 <Route element={<PrivateRoutes role = 'admin' />}>
                   <Route path="/admin" element={<HomeAdmin/>} />

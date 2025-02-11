@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styles from './Navbar.module.css';
 import { HashLink } from 'react-router-hash-link';
 import { Avatar } from "@/components/ui/avatar"
@@ -11,6 +11,7 @@ const Navbar = ({ setLoginDialogOpen, filterOpen, setFilterOpen}) => {
   const [userType, setUserType] = useState('');
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
 
@@ -69,6 +70,7 @@ const Navbar = ({ setLoginDialogOpen, filterOpen, setFilterOpen}) => {
         return (
           <>
               <li><HashLink to="/user" onClick={handleMenuClick}>Početna</HashLink></li>
+              <li><HashLink to="/user-my-reservations" onClick={handleMenuClick}>Moje rezervacije</HashLink></li>
               <li><HashLink to="/" onClick={handleLogout}>Odjava</HashLink></li>
               <li className={styles.avatarContainer}>
                   <Avatar
@@ -103,17 +105,19 @@ const Navbar = ({ setLoginDialogOpen, filterOpen, setFilterOpen}) => {
       <div className={`${styles.navbarOverlay}`}></div>
 
       <div className={`${styles.titleAndFilter}`}>
-      <FaFilter
-        className="filter-icon"
-        style={{
-          fontSize: '27px',
-          cursor: 'pointer',
-          color: filterOpen ? '#339dff' : 'white', 
-          transition: 'color 0.3s ease, transform 0.3s ease',
-          transform: filterOpen ? 'scale(1.2)' : 'scale(1)', 
-        }}
-        onClick={handleFilterClick}
-      />
+      {location.pathname !== '/user-reservation' && (
+        <FaFilter
+          className="filter-icon"
+          style={{
+            fontSize: '27px',
+            cursor: 'pointer',
+            color: filterOpen ? '#339dff' : 'white', 
+            transition: 'color 0.3s ease, transform 0.3s ease',
+            transform: filterOpen ? 'scale(1.2)' : 'scale(1)', 
+          }}
+          onClick={handleFilterClick}
+        />
+      )}
       <HashLink to="/" className="logo">
         Booking4U
       </HashLink>

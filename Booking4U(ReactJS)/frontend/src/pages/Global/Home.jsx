@@ -50,7 +50,7 @@ export const Home = ({loginDialogOpen,setLoginDialogOpen,filterOpen}) => {
                 <LoginForm loginDialogOpen={loginDialogOpen} setLoginDialogOpen={setLoginDialogOpen}/>
             </div>
         )}
-        <Hotels filterOpen={filterOpen}/>
+        <Hotels setLoginDialogOpen={setLoginDialogOpen} filterOpen={filterOpen}/>
     </> 
   );
 }

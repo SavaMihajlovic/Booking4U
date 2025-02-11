@@ -331,10 +331,10 @@ const Sidebar = ({setFilteredHotels,currentPage}) => {
         w='100%'
         marginTop={10}
         padding={3} 
-        backgroundColor='#007bff'
+        backgroundColor='#003580'
         variant="solid"
         _hover={{
-          bg: "#0056b3",
+          bg: "#0056A0",
           color: "white",
           boxShadow: "md",
           transition: "background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease",
