@@ -1,10 +1,9 @@
 public class Reservation {
 
-    [MaxLength(30)]
-    public required string UserId { get; set; }
+    public required List<Room> Rooms { get; set; }
     
-    [MaxLength(30)]
-    public required string RoomId { get; set; }
+    [Range(0,5000)]
+    public required double TotalPrice { get; set; }
 
 
 }

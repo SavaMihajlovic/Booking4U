@@ -1,11 +1,9 @@
 public class HotelService {
     private readonly IMongoCollection<Hotel> _hotelsCollection;
-    private readonly IMongoCollection<Room> _roomsCollection;
 
     public HotelService(IMongoDatabase database) 
     {
         _hotelsCollection = database.GetCollection<Hotel>("hotels_collection");
-        _roomsCollection = database.GetCollection<Room>("rooms_collection");
     }
 
     public async Task<Hotel> GetHotel(string id) 
@@ -133,4 +131,51 @@ public class HotelService {
         .ToListAsync();
         return contries;
     }
+
+    
+    public async Task AddRoomsToHotel(string hotelId , List<Room> rooms)
+    {
+       var hotel = await _hotelsCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
+       throw new Exception($"Hotel with id:{hotelId} does not exist.");
+
+
+
+       if(rooms.Count > 0)
+       {
+            hotel.Rooms ??= [];
+            foreach(Room room in rooms)
+            {
+                var roomExists = hotel.Rooms.Any(r => r.RoomNumber == room.RoomNumber);
+                if(roomExists)
+                    throw new Exception("Room number already taken");
+                hotel.Rooms.Add(room);
+            }
+            await _hotelsCollection.ReplaceOneAsync(h => h.Id == hotelId , hotel);
+       }
+       else
+            throw new Exception($"No rooms have been listed.");
+
+        
+    }
+
+
+    
+    public async Task<List<Room>> GetAllRoomsFromHotel(string hotelId)
+    {
+        var hotel = await _hotelsCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
+        throw new Exception($"Hotel with id:{hotelId} not found");
+
+        if(hotel.Rooms == null) return [];
+        return hotel.Rooms;
+    }
+    
+    
+    public async Task<List<string>> GetAllRoomTypes()
+    {
+        var types = await _hotelsCollection
+        .Distinct<string>("Rooms.TypeOfRoom",FilterDefinition<Hotel>.Empty)
+        .ToListAsync();
+        return types;
+    }
+    
 }

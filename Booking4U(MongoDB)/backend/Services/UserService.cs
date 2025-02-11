@@ -1,10 +1,12 @@
 public class UserService {
-    private readonly IMongoCollection<User> _userCollection;
+    private readonly IMongoCollection<User> _usersCollection;
+    private readonly IMongoCollection<Hotel> _hotelsCollection;
     private readonly IConfiguration _configuration;
     public UserService(IConfiguration configuration , IMongoDatabase database) 
     {
         _configuration = configuration;
-        _userCollection = database.GetCollection<User>("users_collection");
+        _usersCollection = database.GetCollection<User>("users_collection");
+        _hotelsCollection = database.GetCollection<Hotel>("hotels_collection");
     }
 
     public async Task Register(User user)
@@ -24,7 +26,7 @@ public class UserService {
 
         user.Password = hashpass;
 
-        await _userCollection.InsertOneAsync(user);
+        await _usersCollection.InsertOneAsync(user);
     }
 
     public async Task<string> Login(string email, string password)
@@ -34,7 +36,7 @@ public class UserService {
         if(string.IsNullOrEmpty(password))
             throw new Exception("This field is required");
         
-        var user = await _userCollection.Find(u => u.Email == email).FirstOrDefaultAsync();
+        var user = await _usersCollection.Find(u => u.Email == email).FirstOrDefaultAsync();
 
         if(user == null)
             throw new Exception("User does not exist");
@@ -65,4 +67,21 @@ public class UserService {
         var jwt = new JwtSecurityTokenHandler().WriteToken(token);
         return jwt;
     } 
+
+    public async Task AddReservations(string userId , string hotelId , List<int> roomNumbers)
+    {
+        var user = await _usersCollection.Find(u => u.Id == userId).FirstOrDefaultAsync() ??
+        throw new Exception($"user:{userId} does not exist");
+        var hotel = await _hotelsCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
+        throw new Exception($"hotel:{hotelId} does not exist");
+        if(hotel.Rooms == null)
+            throw new Exception("Hotel does not contain any rooms");
+        var rooms = hotel.Rooms.Where(r => roomNumbers.Contains(r.RoomNumber)).ToList();
+        if(rooms.Count != roomNumbers.Count)
+            throw new Exception("Invalid room numbers");
+        double totalPrice = rooms.Sum(r => r.PriceForNight);
+        user.Reservations ??= [];
+        user.Reservations.Add(new Reservation { Rooms = rooms, TotalPrice = totalPrice });
+        await _usersCollection.ReplaceOneAsync(u => u.Id == userId , user);
+    }
 }

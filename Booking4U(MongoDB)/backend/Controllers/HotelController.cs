@@ -198,4 +198,46 @@ public class HotelController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+    [HttpPut("AddRoomsToHotel/{hotelId}")]
+    public async Task<ActionResult> AddRoomsToHotel(string hotelId ,[FromBody]List<Room> rooms)
+    {
+        try{
+            if(rooms.Count == 0)
+                return BadRequest("No rooms have been listed");
+            if(string.IsNullOrEmpty(hotelId))
+                return BadRequest("No hotel has been listed");
+            await _service.AddRoomsToHotel(hotelId, rooms);
+            return Ok("Rooms have been added to hotel");
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    [HttpGet("GetAllRoomsFromHotel/{hotelId}")]
+    
+    public async Task<ActionResult> GetAllRoomsFromHotel(string hotelId)
+    {
+        try{
+            if(string.IsNullOrEmpty(hotelId))
+                return BadRequest("No hotel has been listed");
+            return Ok(await _service.GetAllRoomsFromHotel(hotelId));
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+    [HttpGet("GetAllRoomTypes")]
+    public async Task<ActionResult> GetAllRoomTypes()
+    {
+        try
+        {
+            return Ok(await _service.GetAllRoomTypes());
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
 }

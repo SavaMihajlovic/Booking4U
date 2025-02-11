@@ -17,4 +17,6 @@ public class User
     public string? JMBG { get; set; }
     [MaxLength(10)]
     public required string TypeOfUser { get; set; }
+
+    public List<Reservation>? Reservations { get; set; }
 }

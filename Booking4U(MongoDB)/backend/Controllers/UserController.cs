@@ -39,4 +39,26 @@ public class UserController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+    [HttpPut("AddReservations/{userId}/{hotelId}")]
+    public async Task<ActionResult> AddReservations(string userId , string hotelId , [FromBody] List<int> roomNumbers)
+    {
+        try
+        {
+            if(string.IsNullOrEmpty(userId))
+                return BadRequest($"user is not listed");
+            if(string.IsNullOrEmpty(hotelId))
+                return BadRequest($"hotel is not listed");
+            if(roomNumbers.Count == 0)
+                return BadRequest("rooms are not listed");
+            await _service.AddReservations(userId , hotelId, roomNumbers);
+            return Ok("Reservations have been made");
+        }
+        catch(Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    
 }
