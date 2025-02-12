@@ -19,7 +19,7 @@ public class TestController : ControllerBase
         try
         {
             await _database.RunCommandAsync((Command<BsonDocument>)"{ping:1}");
-            return Ok(new { Message = "Connected successfully to Booking4U!" });
+            return Ok("Connected successfully to Booking4U!");
         }
         catch (Exception ex)
         {

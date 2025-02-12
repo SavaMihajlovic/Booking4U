@@ -9,7 +9,7 @@ public class HotelService {
     public async Task<Hotel> GetHotel(string id) 
     {
         var hotel = await _hotelsCollection.Find(h => h.Id == id).FirstOrDefaultAsync() ?? 
-        throw new Exception($"Hotel with id:{id} not found");
+        throw new ExceptionWithCode(ErrorCode.NotFound,$"Hotel with id:{id} not found");
         return hotel;
     }
 
@@ -43,14 +43,14 @@ public class HotelService {
     public async Task DeleteHotel(string id)
     {
         var hotel = await _hotelsCollection.Find(h => h.Id == id).FirstOrDefaultAsync() ?? 
-        throw new Exception($"Hotel with id:{id} not found");
+        throw new ExceptionWithCode(ErrorCode.NotFound, $"Hotel with id:{id} not found");
         await _hotelsCollection.DeleteOneAsync(h => h.Id == hotel.Id);
     }
 
        public async Task UpdateHotel(Hotel hotel) 
     {
         var hotelExists = await _hotelsCollection.Find(h => h.Id == hotel.Id).FirstOrDefaultAsync() ?? 
-        throw new Exception($"Hotel with id:{hotel.Id} not found");
+        throw new ExceptionWithCode(ErrorCode.NotFound, $"Hotel with id:{hotel.Id} not found");
         await _hotelsCollection.ReplaceOneAsync(h => h.Id == hotel.Id, hotel);
     }
     
@@ -147,13 +147,13 @@ public class HotelService {
             {
                 var roomExists = hotel.Rooms.Any(r => r.RoomNumber == room.RoomNumber);
                 if(roomExists)
-                    throw new Exception("Room number already taken");
+                    throw new ExceptionWithCode(ErrorCode.Conflict, "Room number already taken");
                 hotel.Rooms.Add(room);
             }
             await _hotelsCollection.ReplaceOneAsync(h => h.Id == hotelId , hotel);
        }
        else
-            throw new Exception($"No rooms have been listed.");
+            throw new ExceptionWithCode(ErrorCode.BadRequest , $"No rooms have been listed.");
 
         
     }

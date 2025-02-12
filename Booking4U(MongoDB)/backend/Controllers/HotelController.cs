@@ -28,7 +28,7 @@ public class HotelController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(500 , $"Internal server error:{ex.Message}");
         }
     }
 
@@ -70,9 +70,13 @@ public class HotelController : ControllerBase
         {
             return Ok(await _service.GetHotel(id));
         }
+        catch(ExceptionWithCode ex)
+        {
+            return StatusCode((int)ex.ErrorCode, ex.Message);
+        }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(500 , $"Internal server error:{ex.Message}");
         }
     }
 
@@ -85,11 +89,16 @@ public class HotelController : ControllerBase
             await _service.DeleteHotel(id);
             return Ok($"Hotel ${id} has been successfully deleted.");
         }
+        catch(ExceptionWithCode ex)
+        {
+            return StatusCode((int)ex.ErrorCode, ex.Message);
+        }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(500 , $"Internal server error:{ex.Message}");
         }
     }
+    
 
     [HttpPut("UpdateHotel")]
 
@@ -104,9 +113,15 @@ public class HotelController : ControllerBase
             await _service.UpdateHotel(hotel);
             return Ok($"Hotel ${hotel.Id} has been successfully updated.");
         }
+
+        catch(ExceptionWithCode ex)
+        {
+            return StatusCode((int)ex.ErrorCode, ex.Message);
+        }
+
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(500 , $"Internal server error:{ex.Message}");
         }
     }
     
@@ -209,9 +224,15 @@ public class HotelController : ControllerBase
             await _service.AddRoomsToHotel(hotelId, rooms);
             return Ok("Rooms have been added to hotel");
         }
-        catch(Exception ex)
+       
+        catch(ExceptionWithCode ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode((int)ex.ErrorCode, ex.Message);
+        }
+        
+        catch (Exception ex)
+        {
+            return StatusCode(500 , $"Internal server error:{ex.Message}");
         }
     }
     [HttpGet("GetAllRoomsFromHotel/{hotelId}")]
@@ -223,9 +244,15 @@ public class HotelController : ControllerBase
                 return BadRequest("No hotel has been listed");
             return Ok(await _service.GetAllRoomsFromHotel(hotelId));
         }
-        catch(Exception ex)
+       
+        catch(ExceptionWithCode ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode((int)ex.ErrorCode, ex.Message);
+        }
+        
+        catch (Exception ex)
+        {
+            return StatusCode(500 , $"Internal server error:{ex.Message}");
         }
     }
     [HttpGet("GetAllRoomTypes")]
