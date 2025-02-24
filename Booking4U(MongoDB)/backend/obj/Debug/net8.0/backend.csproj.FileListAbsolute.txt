@@ -179,6 +179,13 @@ C:\Users\msava\OneDrive\Desktop\IV GODINA\SEMESTAR 7\NAPREDNE BAZE PODATAKA\Book
 C:\Users\msava\OneDrive\Desktop\IV GODINA\SEMESTAR 7\NAPREDNE BAZE PODATAKA\Booking4U\Booking4U(MongoDB)\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
 C:\Users\msava\OneDrive\Desktop\IV GODINA\SEMESTAR 7\NAPREDNE BAZE PODATAKA\Booking4U\Booking4U(MongoDB)\backend\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\msava\OneDrive\Desktop\IV GODINA\SEMESTAR 7\NAPREDNE BAZE PODATAKA\Booking4U\Booking4U(MongoDB)\backend\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.csproj.AssemblyReference.cache
+C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.AssemblyInfoInputs.cache
+C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.AssemblyInfo.cs
+C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.csproj.CoreCompileInputs.cache
+C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\bin\Debug\net8.0\appsettings.json
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\bin\Debug\net8.0\backend.exe
@@ -204,13 +211,6 @@ C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\bin\Debug\net8.0\Swas
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\bin\Debug\net8.0\ZstdSharp.dll
-C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.csproj.AssemblyReference.cache
-C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.AssemblyInfoInputs.cache
-C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.AssemblyInfo.cs
-C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.csproj.CoreCompileInputs.cache
-C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\staticwebassets\msbuild.backend.Microsoft.AspNetCore.StaticWebAssets.props

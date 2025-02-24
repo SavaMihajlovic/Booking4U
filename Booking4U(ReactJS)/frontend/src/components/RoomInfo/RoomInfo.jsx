@@ -19,7 +19,7 @@ const RoomInfo = ({room,index}) => {
                 style={{
                     position: "relative", 
                     width: "100%", 
-                    paddingBottom: "100%", // Obezbeđuje kockasti oblik (aspect ratio 1:1)
+                    paddingBottom: "100%", 
                     overflow: "hidden"
                 }}
             >

@@ -133,33 +133,39 @@ public class HotelService {
     }
 
     
-    public async Task AddRoomsToHotel(string hotelId , List<Room> rooms)
+   public async Task AddRoomToHotel(string hotelId, RoomDto roomDto, List<IFormFile> images)
     {
-       var hotel = await _hotelsCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
-       throw new Exception($"Hotel with id:{hotelId} does not exist.");
+        var hotel = await _hotelsCollection
+            .Find(h => h.Id == hotelId)
+            .FirstOrDefaultAsync() 
+            ?? throw new ExceptionWithCode(ErrorCode.NotFound, $"Hotel with id:{hotelId} not found");
 
+        List<string> imageBase64List = [];
+        foreach (var image in images)
+        {
+            using var stream = new MemoryStream();
+            await image.CopyToAsync(stream);
+            imageBase64List.Add(Convert.ToBase64String(stream.ToArray()));
+        }
 
+        var room = new Room
+        {
+            RoomNumber = roomDto.RoomNumber,
+            TypeOfRoom = roomDto.TypeOfRoom,
+            PriceForNight = roomDto.PriceForNight,
+            Characteristics = roomDto.Characteristics,
+            Description = roomDto.Description,
+            NumberOfPersons = roomDto.NumberOfPersons,
+            Images = imageBase64List 
+        };
 
-       if(rooms.Count > 0)
-       {
-            hotel.Rooms ??= [];
-            foreach(Room room in rooms)
-            {
-                var roomExists = hotel.Rooms.Any(r => r.RoomNumber == room.RoomNumber);
-                if(roomExists)
-                    throw new ExceptionWithCode(ErrorCode.Conflict, "Room number already taken");
-                hotel.Rooms.Add(room);
-            }
-            await _hotelsCollection.ReplaceOneAsync(h => h.Id == hotelId , hotel);
-       }
-       else
-            throw new ExceptionWithCode(ErrorCode.BadRequest , $"No rooms have been listed.");
+        hotel.Rooms ??= [];
 
+        hotel.Rooms.Add(room);
         
+        await _hotelsCollection.ReplaceOneAsync(h => h.Id == hotel.Id, hotel);
     }
 
-
-    
     public async Task<List<Room>> GetAllRoomsFromHotel(string hotelId)
     {
         var hotel = await _hotelsCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??

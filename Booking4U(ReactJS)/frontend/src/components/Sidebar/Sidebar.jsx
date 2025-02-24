@@ -27,7 +27,7 @@ const Sidebar = ({setFilteredHotels,currentPage}) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const roomTypesResponse = await axios.get("http://localhost:5193/Room/GetAllRoomTypes");
+        const roomTypesResponse = await axios.get("http://localhost:5193/Hotel/GetAllRoomTypes");
         setRoomTypes(roomTypesResponse.data);
 
         const countriesResponse = await axios.get("http://localhost:5193/Hotel/GetAllCountries");

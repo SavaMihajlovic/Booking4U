@@ -213,28 +213,35 @@ public class HotelController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
-    [HttpPut("AddRoomsToHotel/{hotelId}")]
-    public async Task<ActionResult> AddRoomsToHotel(string hotelId ,[FromBody]List<Room> rooms)
+
+    [HttpPut("AddRoomToHotel/{hotelId}")]
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult> AddRoomToHotel(string hotelId, [FromForm] RoomDto roomDto, [FromForm] List<IFormFile> images)
     {
-        try{
-            if(rooms.Count == 0)
-                return BadRequest("No rooms have been listed");
-            if(string.IsNullOrEmpty(hotelId))
+        try
+        {
+            if (string.IsNullOrEmpty(hotelId))
                 return BadRequest("No hotel has been listed");
-            await _service.AddRoomsToHotel(hotelId, rooms);
+
+            if (roomDto == null)
+            return BadRequest("No room has been provided");
+
+            if (images == null || images.Count == 0)
+            return BadRequest("No images have been provided");
+
+            await _service.AddRoomToHotel(hotelId, roomDto, images);
             return Ok("Rooms have been added to hotel");
         }
-       
-        catch(ExceptionWithCode ex)
+        catch (ExceptionWithCode ex)
         {
             return StatusCode((int)ex.ErrorCode, ex.Message);
         }
-        
         catch (Exception ex)
         {
-            return StatusCode(500 , $"Internal server error:{ex.Message}");
+            return StatusCode(500, $"Internal server error: {ex.Message}");
         }
     }
+
     [HttpGet("GetAllRoomsFromHotel/{hotelId}")]
     
     public async Task<ActionResult> GetAllRoomsFromHotel(string hotelId)
