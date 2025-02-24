@@ -10,7 +10,7 @@ import {
 import { VStack, Input, Box, Button } from "@chakra-ui/react"
 import axios from 'axios'
 
-const Sidebar = ({setFilteredHotels,currentPage}) => {
+const Sidebar = ({setFilteredHotels,currentPage,setIsFiltered}) => {
 
   const [roomTypes, setRoomTypes] = useState([]);
   const [countries, setCountries] = useState([]);
@@ -60,6 +60,7 @@ const Sidebar = ({setFilteredHotels,currentPage}) => {
 
       if (response.status === 200) {
           setFilteredHotels(response.data);
+          setIsFiltered(true);
       } else {
         console.error('Greška u odgovoru:', response.status);
       }

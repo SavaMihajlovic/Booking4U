@@ -1,5 +1,6 @@
 import React from 'react'
-import { Badge, Box, Button, Card, HStack, Image } from "@chakra-ui/react"
+import { Box, Button, Card, HStack, Text } from "@chakra-ui/react"
+import ImageCarousel from '../ImageCarousel/ImageCarousel';
 
 const RoomInfo = ({room,index}) => {
   return (
@@ -23,18 +24,7 @@ const RoomInfo = ({room,index}) => {
                     overflow: "hidden"
                 }}
             >
-                <Image
-                    alt={index} 
-                    src={room.image ? `data:image/jpeg;base64,${room.image}` : ''}
-                    style={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%", 
-                        height: "100%", 
-                        objectFit: "cover" // Održava proporcije slike i ispunjava ceo okvir
-                    }}
-                />
+                <ImageCarousel images={room.images}/>
             </Box>
             <Box>
                 <Card.Body 
@@ -47,8 +37,11 @@ const RoomInfo = ({room,index}) => {
                 gap="2"
                 >
                 <Card.Title>{room.typeOfRoom}</Card.Title>
-                <Card.Description>
-                    {room.description || 'No description available.'}
+                <Card.Description fontSize='md'>
+                    <Box display='flex' flexDirection='column'> 
+                        <Text/>Broj sobe : {room.roomNumber || 'No description available.'}
+                        <Text/>{room.description || 'No description available.'}
+                    </Box>
                 </Card.Description>
                 <HStack mt="4">
                 <Box as="ul" mb="4" listStyleType="circle" display='flex' flexDirection='column'>

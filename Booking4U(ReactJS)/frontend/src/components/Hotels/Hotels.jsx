@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { HStack } from "@chakra-ui/react"
+import { Box, HStack } from "@chakra-ui/react"
 import {
     PaginationItems,
     PaginationNextTrigger,
@@ -16,6 +16,7 @@ const Hotels = ({filterOpen,setLoginDialogOpen}) => {
     const [hotels, setHotels] = useState([]);
     const [hotelsCount, setHotelsCount] = useState(0);
     const [filteredHotels, setFilteredHotels] = useState([]);
+    const [isFiltered, setIsFiltered] = useState(false);
 
     useEffect(() => {  
         const fetchHotels = async () => {
@@ -45,26 +46,53 @@ const Hotels = ({filterOpen,setLoginDialogOpen}) => {
         <>
         <div className={!filterOpen ? 'sekcije' : `${styles.filterSekcije}`}>
             {filterOpen && (
-                <Sidebar setFilteredHotels={setFilteredHotels} currentPage={currentPage}/>
+                <Sidebar setFilteredHotels={setFilteredHotels} currentPage={currentPage} setIsFiltered={setIsFiltered}/>
             )}
-            <section id="hotels">
-                <div className="items-container">
-                    <div className="menu-container">
-                    {(filteredHotels.length > 0 ? filteredHotels : hotels)
-                    .map((hotel, index) => (
-                        <HotelInfo hotel={hotel} key={index} setLoginDialogOpen={setLoginDialogOpen} />
-                    ))}
-                    </div>
-                    <section id="pagination">
-                        <PaginationRoot count={hotelsCount} pageSize={10} defaultPage={1} size='md' onPageChange={handlePageChange} >
-                            <HStack justify="center">
-                            <PaginationPrevTrigger style={{backgroundColor :'#fff'}} _hover={{color: 'black'}}/>
-                            <PaginationItems style={{backgroundColor :'#fff' , fontWeight: 'bold'}} _hover={{color: 'black'}} />
-                            <PaginationNextTrigger style={{backgroundColor :'#fff'}} _hover={{color: 'black'}}/>
-                            </HStack>
-                        </PaginationRoot>
-                    </section>
-                </div>
+            <section id="hotels">           
+                    {isFiltered ? (
+                        filteredHotels.length > 0 ? (
+                        <div className="items-container">
+                            <div className="menu-container">
+                                {filteredHotels.map((hotel, index) => (
+                                    <HotelInfo hotel={hotel} key={index} setLoginDialogOpen={setLoginDialogOpen} />
+                                ))
+                            }
+                            </div>
+                        </div>
+                        ) : (
+                            <Box
+                                display='flex'
+                                justifyContent='center'
+                                alignItems='center'
+                                width='100%'
+                                height='100%'
+                                fontWeight='bold'
+                                fontSize='23px'
+                            >
+                                Ne postoji hotel koji zadovoljava zadate kriterijume.
+                            </Box>
+                        )
+                    ) : (
+                        <div className="items-container">
+                            <div className="menu-container">
+                                {hotels.map((hotel, index) => (
+                                <HotelInfo hotel={hotel} key={index} setLoginDialogOpen={setLoginDialogOpen} />
+                            ))}
+                            </div>
+                        </div>
+                    )}
+                    
+                    {(!isFiltered || filteredHotels.length > 0) && (
+                        <section id="pagination">
+                            <PaginationRoot count={hotelsCount} pageSize={10} defaultPage={1} size='md' onPageChange={handlePageChange} >
+                                <HStack justify="center">
+                                <PaginationPrevTrigger style={{backgroundColor :'#fff'}} _hover={{color: 'black'}}/>
+                                <PaginationItems style={{backgroundColor :'#fff' , fontWeight: 'bold'}} _hover={{color: 'black'}} />
+                                <PaginationNextTrigger style={{backgroundColor :'#fff'}} _hover={{color: 'black'}}/>
+                                </HStack>
+                            </PaginationRoot>
+                        </section>
+                    )}
             </section>
         </div>
         </>
