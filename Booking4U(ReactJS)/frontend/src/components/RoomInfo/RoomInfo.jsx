@@ -1,8 +1,25 @@
 import React from 'react'
-import { Box, Button, Card, HStack, Text } from "@chakra-ui/react"
+import { Box, Button, Card, HStack, VStack } from "@chakra-ui/react"
+import { BsPersonCircle } from "react-icons/bs";
 import ImageCarousel from '../ImageCarousel/ImageCarousel';
 
-const RoomInfo = ({room,index}) => {
+const RoomInfo = ({room,index,checkInDate,checkOutDate,
+                   roomsForReservation,setRoomsForReservation}) => {
+
+    const isReserved = roomsForReservation.includes(room.roomNumber);
+
+    const handleReservationToggle = () => {
+        if (!checkInDate || !checkOutDate) return;
+
+        let updatedRooms;
+        if (isReserved) {
+            updatedRooms = roomsForReservation.filter(num => num !== room.roomNumber);
+        } else {
+            updatedRooms = [...roomsForReservation, room.roomNumber];
+        }
+        setRoomsForReservation(updatedRooms);
+    };              
+
   return (
         <Card.Root 
             key={room.id || index} 
@@ -38,31 +55,42 @@ const RoomInfo = ({room,index}) => {
                 >
                 <Card.Title>{room.typeOfRoom}</Card.Title>
                 <Card.Description fontSize='md'>
-                    <Box display='flex' flexDirection='column'> 
-                        <Text/>Broj sobe : {room.roomNumber || 'No description available.'}
-                        <Text/>{room.description || 'No description available.'}
-                    </Box>
+                    <span>Broj sobe : {room.roomNumber || 'No description available.'}</span>
+                    <br />
+                    <span>{room.description || 'No description available.'}</span>
                 </Card.Description>
-                <HStack mt="4">
-                <Box as="ul" mb="4" listStyleType="circle" display='flex' flexDirection='column'>
-                    <li><strong>{room.priceForNight} EUR</strong></li>
+                <VStack mt="2" alignItems='flex-start'>
+                <Box as="ul" display='flex' flexDirection='column'>
+                    <HStack>
+                        <BsPersonCircle style={{ marginBottom: '1px' }} size={20}/>
+                        <strong>: {room.numberOfPersons}</strong>
+                    </HStack>
                 </Box>
-                </HStack>
+                <Box as="ul" mb="2" display='flex' flexDirection='column'>
+                    <strong>{room.priceForNight} EUR</strong>
+                </Box>
+                </VStack>
                 <Card.Footer>
                     <Button 
-                    width='200px'
+                    width='250px'
                     padding={3} 
+                    disabled={!checkInDate || !checkOutDate}
                     colorPalette="whiteAlpha" 
                     variant="solid"
-                    backgroundColor="#003580"
+                    backgroundColor={isReserved ? "red.500" : "#003580"}
                     _hover={{
-                        bg: "#0056A0",
+                        bg: isReserved ? "red.600" : "#0056A0",
                         color: "white",
                         boxShadow: "md",
                         transition: "background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease",
                     }}
+                    onClick={handleReservationToggle}
                     >
-                    Rezerviši
+                    {!checkInDate || !checkOutDate 
+                        ? "Unesite datume prijave i odjave" 
+                        : isReserved 
+                            ? "Poništi rezervaciju" 
+                            : "Rezerviši"}
                     </Button>
                 </Card.Footer>
                 </Card.Body>

@@ -87,7 +87,19 @@ public class ReservationController : ControllerBase
         }
     }
 
+    [HttpPost("GetTotalPrice/{hotelId}")]
+    public async Task<ActionResult> GetTotalPrice(string hotelId, DateTime checkInDate, DateTime checkOutDate, List<int> roomNumbers)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(hotelId))
+                return BadRequest("hotelId must not be empty.");
 
-
-    
+            return Ok(await _service.GetTotalPrice(hotelId, checkInDate, checkOutDate, roomNumbers));
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error:{ex.Message}");
+        }
+    }
 }

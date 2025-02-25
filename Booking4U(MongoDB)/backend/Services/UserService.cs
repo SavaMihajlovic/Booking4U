@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Http.HttpResults;
+
 public class UserService {
     private readonly IMongoCollection<User> _usersCollection;
 
@@ -49,6 +51,7 @@ public class UserService {
     }
     private string CreateToken(User user){
         List<Claim> claims = new List<Claim>(){
+            new Claim("UserId", user.Id!),
             new Claim("Email", user.Email),
             new Claim("FirstName", user.FirstName ),
             new Claim("LastName", user.LastName),

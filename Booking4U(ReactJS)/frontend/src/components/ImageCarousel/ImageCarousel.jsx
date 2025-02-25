@@ -4,9 +4,7 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const ImageCarousel = ({ images }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
-
-    console.log(images);
-
+    
     const goToNextImage = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
     };

@@ -87,4 +87,28 @@ public class ReservationService
     {
         return await _reservationsCollection.Find(r => true).ToListAsync();
     }
+
+    public async Task<double> GetTotalPrice(string hotelId, DateTime checkInDate, DateTime checkOutDate, List<int> roomNumbers)
+    {
+        if(checkInDate.Date >= checkOutDate.Date)
+            throw new ExceptionWithCode(ErrorCode.BadRequest,$"checkoutDate must be after checkInDate and minimum diference must be atleast one day");
+
+        if(roomNumbers == null || roomNumbers.Count == 0)
+            throw new ExceptionWithCode(ErrorCode.BadRequest,"atleast one room must be selected");
+
+        var hotel = await _hotelsCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
+        throw new ExceptionWithCode(ErrorCode.NotFound,$"hotel:{hotelId} does not exist");
+
+        if(hotel.Rooms == null)
+            throw new ExceptionWithCode(ErrorCode.BadRequest,"Hotel does not contain any rooms");
+
+        var rooms = hotel.Rooms.Where(r => roomNumbers.Contains(r.RoomNumber)).ToList();
+        if(rooms.Count != roomNumbers.Count)
+            throw new ExceptionWithCode(ErrorCode.BadRequest,"Invalid room numbers");
+
+        int days = (checkOutDate.Date - checkInDate.Date).Days;
+        double totalPrice = rooms.Sum(r => r.PriceForNight*days);
+        
+        return totalPrice;
+    }
 }
