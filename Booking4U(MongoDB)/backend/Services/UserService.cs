@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Http.HttpResults;
-
 public class UserService {
     private readonly IMongoCollection<User> _usersCollection;
 

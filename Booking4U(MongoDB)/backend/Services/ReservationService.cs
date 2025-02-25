@@ -111,4 +111,48 @@ public class ReservationService
         
         return totalPrice;
     }
+
+  public async Task ValidateReservation(string userId , string hotelId , List<int> roomNumbers , DateTime checkInDate , DateTime checkOutDate , double ammount)
+{
+    if (string.IsNullOrEmpty(userId))
+        throw new ExceptionWithCode(ErrorCode.BadRequest, "User ID cannot be empty");
+    
+    if (string.IsNullOrEmpty(hotelId))
+        throw new ExceptionWithCode(ErrorCode.BadRequest, "Hotel ID cannot be empty");
+    
+    if (roomNumbers == null || roomNumbers.Count == 0)
+        throw new ExceptionWithCode(ErrorCode.BadRequest, "At least one room must be selected");
+    
+    if (checkInDate.Date >= checkOutDate.Date)
+        throw new ExceptionWithCode(ErrorCode.BadRequest, "Check-out date must be after check-in date, with a minimum difference of one day");
+    
+    var user = await _usersCollection.Find(u => u.Id == userId).FirstOrDefaultAsync() ??
+        throw new ExceptionWithCode(ErrorCode.NotFound, $"User {userId} does not exist");
+    
+    var hotel = await _hotelsCollection.Find(h => h.Id == hotelId).FirstOrDefaultAsync() ??
+        throw new ExceptionWithCode(ErrorCode.NotFound, $"Hotel {hotelId} does not exist");
+    
+    if (hotel.Rooms == null || hotel.Rooms.Count == 0)
+        throw new ExceptionWithCode(ErrorCode.BadRequest, "Hotel does not contain any rooms");
+    
+    var rooms = hotel.Rooms.Where(r => roomNumbers.Contains(r.RoomNumber)).ToList();
+    if (rooms.Count != roomNumbers.Count)
+        throw new ExceptionWithCode(ErrorCode.BadRequest, "Invalid room numbers");
+    
+    var reservationExists = await _reservationsCollection.Find(r => 
+        r.Rooms.Any(room => roomNumbers.Contains(room.RoomNumber)) && 
+        r.CheckInDate < checkOutDate && 
+        r.CheckOutDate > checkInDate).ToListAsync();
+    
+    if (reservationExists.Count > 0)
+        throw new ExceptionWithCode(ErrorCode.Conflict, "Reservation already exists for one or more selected rooms");
+    
+    int days = (checkOutDate.Date - checkInDate.Date).Days;
+    double totalPrice = rooms.Sum(r => r.PriceForNight * days);
+    
+    if (ammount < totalPrice)
+        throw new ExceptionWithCode(ErrorCode.BadRequest, "Insufficient amount for the reservation");
+    
+   
+}
 }

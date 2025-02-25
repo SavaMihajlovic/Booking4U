@@ -225,3 +225,11 @@ C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\refi
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.pdb
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\backend.genruntimeconfig.cache
 C:\Users\msava\OneDrive\Desktop\Booking4U(MongoDB)\backend\obj\Debug\net8.0\ref\backend.dll
+C:\Users\Nemanja\Desktop\Booking4U\Booking4U(MongoDB)\backend\bin\Debug\net8.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+C:\Users\Nemanja\Desktop\Booking4U\Booking4U(MongoDB)\backend\bin\Debug\net8.0\Microsoft.Extensions.Options.dll
+C:\Users\Nemanja\Desktop\Booking4U\Booking4U(MongoDB)\backend\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\Nemanja\Desktop\Booking4U\Booking4U(MongoDB)\backend\bin\Debug\net8.0\PayPal.NET.dll
+C:\Users\Nemanja\Desktop\Booking4U\Booking4U(MongoDB)\backend\bin\Debug\net8.0\PayPal.Sdk.Checkout.dll
+C:\Users\Nemanja\Desktop\Booking4U\Booking4U(MongoDB)\backend\bin\Debug\net8.0\PayPalCheckoutSdk.dll
+C:\Users\Nemanja\Desktop\Booking4U\Booking4U(MongoDB)\backend\bin\Debug\net8.0\PayPalHttp-Dotnet.dll
+C:\Users\Nemanja\Desktop\Booking4U\Booking4U(MongoDB)\backend\bin\Debug\net8.0\System.Text.Json.dll

@@ -102,4 +102,29 @@ public class ReservationController : ControllerBase
             return StatusCode(500, $"Internal server error:{ex.Message}");
         }
     }
+
+    [HttpPost("ValidateReservation/{userId}/{hotelId}/{ammount}")]
+    public async Task<ActionResult> ValidateReservation(string userId, string hotelId, List<int> roomNumbers, DateTime checkInDate, DateTime checkOutDate, double ammount)
+    {
+        try
+        {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("userId must not be empty");
+            if (string.IsNullOrEmpty(hotelId))
+                return BadRequest("hotelId must not be empty");
+            if (roomNumbers == null || roomNumbers.Count == 0)
+                return BadRequest("At least one room must be selected");
+            
+            await _service.ValidateReservation(userId, hotelId, roomNumbers, checkInDate, checkOutDate, ammount);
+            return Ok("Validated succesfully!");
+        }
+        catch (ExceptionWithCode ex)
+        {
+            return StatusCode((int)ex.ErrorCode, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Internal server error: {ex.Message}");
+        }
+    }
 }
