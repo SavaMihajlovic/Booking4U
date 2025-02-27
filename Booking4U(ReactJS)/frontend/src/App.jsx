@@ -9,6 +9,8 @@ import PrivateRoutes from "./utils/PrivateRoutes";
 import { HomeAdmin } from "./pages/Admin/HomeAdmin";
 import { UserReservation } from "./pages/User/UserReservation";
 import { UserMyReservations } from "./pages/User/UserMyReservations";
+import { PaymentSuccess } from "./pages/Payment/PaymentSucess";
+import { PaymentFailure } from "./pages/Payment/PaymentFailure";
 
 const App = () => {
 
@@ -27,6 +29,9 @@ const App = () => {
                 <Route path="/" element={<Home loginDialogOpen={loginDialogOpen} 
                                                setLoginDialogOpen={setLoginDialogOpen} 
                                                filterOpen={filterOpen}/>} />
+                <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/payment-failure" element={<PaymentFailure />} />
+
                 <Route element={<PrivateRoutes role = 'user' />}>
                   <Route path="/user" element={<HomeUser filterOpen={filterOpen}/>} />
                   <Route path="/user-reservation" element={<UserReservation/>} />

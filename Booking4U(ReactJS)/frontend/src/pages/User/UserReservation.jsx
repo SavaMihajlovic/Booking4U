@@ -13,8 +13,6 @@ export const UserReservation = () => {
   const [roomsForReservation, setRoomsForReservation] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [user, setUser] = useState(null);
-
-  const navigate = useNavigate();
   const location = useLocation();
   const hotel = location.state?.hotel;
 
@@ -50,18 +48,16 @@ export const UserReservation = () => {
   const handlePayment = async () => {
     try {
         const userData = await UserFetch();
-        if(userData) {
-          setUser(userData);
-        } else {
-          return;
-        }
+        if(!userData) return;
+
+        setUser(userData);
 
         const requestBody = roomsForReservation.map(Number); 
         const formattedCheckInDate = new Date(checkInDate).toISOString();
         const formattedCheckOutDate = new Date(checkOutDate).toISOString();
 
-        const response = await axios.post(
-          `http://localhost:5193/Reservation/AddReservation/${user.UserId}/${hotel.id}?checkInDate=${formattedCheckInDate}&checkOutDate=${formattedCheckOutDate}`,
+        const validateResponse = await axios.post(
+          `http://localhost:5193/Reservation/ValidateReservation/${userData.UserId}/${hotel.id}/${totalAmount}?checkInDate=${formattedCheckInDate}&checkOutDate=${formattedCheckOutDate}`,
           requestBody, 
           {
             headers: {
@@ -70,14 +66,26 @@ export const UserReservation = () => {
           }
         );
 
-        if(response.status === 200) {
-          alert('Uspešno kreiranje rezervacije.');
-          navigate('/user-my-reservations')
+        if (validateResponse.status === 200) {
+            const paymentResponse = await axios.post(
+              `http://localhost:5193/Paypal/MakePayment?userId=${userData.UserId}&hotelId=${hotel.id}&checkInDate=${formattedCheckInDate}&checkOutDate=${formattedCheckOutDate}&ammount=${totalAmount}`,
+              requestBody,
+              {
+                headers: { "Content-Type": "application/json" }
+              }
+            );
+          
+            if (paymentResponse.status === 200) {
+                window.location.href = paymentResponse.data; 
+            } else {
+                alert("Greška pri plaćanju!");
+            }
         }
     } catch(error) {
-      console.error('Error adding reservation.', error);
+      console.error('Greška pri kreiranju rezervacije ili plaćanju.', error);
     }
-  }
+}
+
 
   return (
     <>
