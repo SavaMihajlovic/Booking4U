@@ -102,16 +102,16 @@ public class HotelController : ControllerBase
 
     [HttpPut("UpdateHotel")]
 
-    public async Task<ActionResult> UpdateHotel([FromBody] Hotel hotel)
+    public async Task<ActionResult> UpdateHotel([FromBody] HotelDto hotelDto)
     {
         try
         {
-            if(string.IsNullOrEmpty(hotel.Id))
+            if(string.IsNullOrEmpty(hotelDto.Id))
             {
                 return BadRequest("Id field missing");
             }
-            await _service.UpdateHotel(hotel);
-            return Ok($"Hotel ${hotel.Id} has been successfully updated.");
+            await _service.UpdateHotel(hotelDto);
+            return Ok($"Hotel ${hotelDto.Id} has been successfully updated.");
         }
 
         catch(ExceptionWithCode ex)

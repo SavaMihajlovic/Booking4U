@@ -47,13 +47,31 @@ public class HotelService {
         await _hotelsCollection.DeleteOneAsync(h => h.Id == hotel.Id);
     }
 
-       public async Task UpdateHotel(Hotel hotel) 
+    public async Task UpdateHotel(HotelDto hotelDto)
     {
-        var hotelExists = await _hotelsCollection.Find(h => h.Id == hotel.Id).FirstOrDefaultAsync() ?? 
-        throw new ExceptionWithCode(ErrorCode.NotFound, $"Hotel with id:{hotel.Id} not found");
-        await _hotelsCollection.ReplaceOneAsync(h => h.Id == hotel.Id, hotel);
+        var updateDefinition = Builders<Hotel>.Update
+            .Set(h => h.Name, hotelDto.Name)
+            .Set(h => h.Country, hotelDto.Country)
+            .Set(h => h.City, hotelDto.City)
+            .Set(h => h.Address, hotelDto.Address)
+            .Set(h => h.Score, hotelDto.Score)
+            .Set(h => h.Description, hotelDto.Description)
+            .Set(h => h.Contact, hotelDto.Contact)
+            .Set(h => h.CenterDistance, hotelDto.CenterDistance)
+            .Set(h => h.BeachDistance, hotelDto.BeachDistance)
+            .Set(h => h.Location, hotelDto.Location);
+
+        var result = await _hotelsCollection.UpdateOneAsync(
+            h => h.Id == hotelDto.Id,
+            updateDefinition
+        );
+
+        if (result.ModifiedCount == 0)
+        {
+            throw new ExceptionWithCode(ErrorCode.NotFound, $"Hotel with id:{hotelDto.Id} not found");
+        }
     }
-    
+
     public async Task<List<Hotel>> GetHotelsWithAvgScore(string city , double score)
     {
        return await _hotelsCollection.Find(h => h.City == city && h.Score >= score).ToListAsync();

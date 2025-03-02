@@ -5,6 +5,7 @@ import axios from 'axios';
 import RoomInfo from '../../components/RoomInfo/RoomInfo';
 import DatePicker from '../../components/DatePicker/DatePicker';
 import { UserFetch } from '../../components/UserFetch/UserFetch';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 export const UserReservation = () => {
 
@@ -13,16 +14,19 @@ export const UserReservation = () => {
   const [roomsForReservation, setRoomsForReservation] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const hotel = location.state?.hotel;
 
   useEffect(() => {
     if (!checkInDate || !checkOutDate || roomsForReservation.length === 0) {
       setTotalAmount(0);
+      setLoading(false);
       return;
     }
     const fetchTotalPrice = async () => {
       try {
+        setLoading(true);
         const requestBody = roomsForReservation.map(Number); 
         const formattedCheckInDate = new Date(checkInDate).toISOString();
         const formattedCheckOutDate = new Date(checkOutDate).toISOString();
@@ -39,6 +43,9 @@ export const UserReservation = () => {
         setTotalAmount(response.data);
       } catch (error) {
         console.error('Error fetching total price:', error);
+        setLoading(false);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -48,7 +55,10 @@ export const UserReservation = () => {
   const handlePayment = async () => {
     try {
         const userData = await UserFetch();
-        if(!userData) return;
+        if(!userData) {
+          setLoading(false);
+          return;
+        }
 
         setUser(userData);
 
@@ -86,7 +96,6 @@ export const UserReservation = () => {
     }
 }
 
-
   return (
     <>
     <div className='sekcije'>
@@ -123,6 +132,8 @@ export const UserReservation = () => {
          </Text>
        </div>
     )}
+
+    {loading && (<LoadingSpinner/>)}
     </>
   )
 }

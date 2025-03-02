@@ -27,32 +27,34 @@ const ImageCarousel = ({ images }) => {
                     objectFit: "cover"
                 }}
             />
-
-            <IconButton
-                aria-label="Previous Image"
-                onClick={goToPrevImage}
-                position="absolute"
-                top="50%"
-                left="10px"
-                transform="translateY(-50%)"
-                zIndex="1"
-                backgroundColor='transparent'
-            > 
-                <FaChevronLeft/>
-            </IconButton>
-
-            <IconButton
-                aria-label="Next Image"
-                onClick={goToNextImage}
-                position="absolute"
-                top="50%"
-                right="10px"
-                transform="translateY(-50%)"
-                zIndex="1"
-                backgroundColor='transparent'
-            > 
-                <FaChevronRight />
-            </IconButton>
+            {images.length > 1 && (
+                <>
+                    <IconButton
+                        aria-label="Previous Image"
+                        onClick={goToPrevImage}
+                        position="absolute"
+                        top="50%"
+                        left="10px"
+                        transform="translateY(-50%)"
+                        zIndex="1"
+                        backgroundColor='transparent'
+                    > 
+                        <FaChevronLeft/>
+                    </IconButton>
+                    <IconButton
+                        aria-label="Next Image"
+                        onClick={goToNextImage}
+                        position="absolute"
+                        top="50%"
+                        right="10px"
+                        transform="translateY(-50%)"
+                        zIndex="1"
+                        backgroundColor='transparent'
+                    > 
+                        <FaChevronRight />
+                    </IconButton>
+                </>
+            )}
         </>
     );
 };

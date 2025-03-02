@@ -86,7 +86,8 @@ const Navbar = ({ setLoginDialogOpen, filterOpen, setFilterOpen}) => {
       case 'admin':
         return (
           <>
-              <li><HashLink to="/admin" onClick={handleMenuClick}>Početna</HashLink></li>
+              <li><HashLink to="/admin" onClick={handleMenuClick}>Hotel</HashLink></li>
+              <li><HashLink to="/admin-reservation" onClick={handleMenuClick}>Reservation</HashLink></li>
               <li><HashLink to="/" onClick={handleLogout}>Odjava</HashLink></li>
           </>
         );

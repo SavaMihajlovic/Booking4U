@@ -4,6 +4,7 @@ import RoomInfo from '../../components/RoomInfo/RoomInfo';
 import { UserFetch } from '../../components/UserFetch/UserFetch';
 import ReservedRoomInfo from '../../components/ReservedRoomInfo/ReservedRoomInfo';
 import { Box, Text } from '@chakra-ui/react';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 
 export const UserMyReservations = () => {
   const [user, setUser] = useState(null);
@@ -13,16 +14,18 @@ export const UserMyReservations = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Učitavanje podataka o korisniku
         const userData = await UserFetch();
-        if (!userData) return;
+        if (!userData) {
+          setLoading(false);
+          return;
+        } 
         setUser(userData);
 
-        // Učitavanje rezervacija za korisnika
         const response = await axios.get(`http://localhost:5193/Reservation/GetUserReservations/${userData.UserId}`);
         setReservations(response.data);
       } catch (error) {
         console.error('Greška pri učitavanju podataka:', error);
+        setLoading(false);
       } finally {
         setLoading(false);
       }
@@ -32,7 +35,7 @@ export const UserMyReservations = () => {
   }, []);
 
   if (loading) {
-    return <div>Učitavanje...</div>;
+    return <LoadingSpinner/>;
   }
 
   const formatDate = (date) => {

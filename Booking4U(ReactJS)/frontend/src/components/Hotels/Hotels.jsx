@@ -10,6 +10,7 @@ import {
 import HotelInfo from '../HotelInfo/HotelInfo';
 import styles from './Hotels.module.css';
 import Sidebar from '../Sidebar/Sidebar';
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 
 const Hotels = ({filterOpen,setLoginDialogOpen}) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -17,6 +18,7 @@ const Hotels = ({filterOpen,setLoginDialogOpen}) => {
     const [hotelsCount, setHotelsCount] = useState(0);
     const [filteredHotels, setFilteredHotels] = useState([]);
     const [isFiltered, setIsFiltered] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {  
         const fetchHotels = async () => {
@@ -28,6 +30,9 @@ const Hotels = ({filterOpen,setLoginDialogOpen}) => {
             response.status === 200 ? setHotels(response.data) : console.error("Error fetching hotels.");
           } catch (error) {
             console.error('Greska u pribavljanju hotela.', error);
+            setLoading(false);
+          } finally {
+            setLoading(false);
           }
         };
         fetchHotels();
@@ -41,6 +46,10 @@ const Hotels = ({filterOpen,setLoginDialogOpen}) => {
         const element = document.getElementById("hotels");
         element.scrollIntoView({ behavior: "smooth", block: "start" });
     }; 
+
+    if (loading) {
+        return <LoadingSpinner/>;
+    }
 
     return (
         <>
